@@ -6,7 +6,7 @@
 .env
 
 #Datasets -- Preventative
-./data
+/data
 
 #Personal FIles
 /guides
