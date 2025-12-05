@@ -31,6 +31,7 @@ def download_dataset():
         os.makedirs(DOWNLOAD_DIR)
     else:
         print(f"Data directory '{DOWNLOAD_DIR}' already exists. Skipping download. If you think this is an error, delete the directory and try again.")
+        exit(-1)
 
     # Construct the download command
     command_list = [
