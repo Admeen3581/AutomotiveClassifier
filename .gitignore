@@ -1,0 +1,12 @@
+#IDE Files
+/.idea
+/vscode
+
+#Secrets
+.env
+
+#Dependencies
+#none yet.
+
+#Personal Files Not Necessary
+/GUIDE.md
