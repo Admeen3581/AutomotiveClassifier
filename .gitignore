@@ -1,0 +1,9 @@
+#IDE Files
+/.idea
+/vscode
+
+#Secrets
+.env
+
+#Dependencies
+#none yet.
