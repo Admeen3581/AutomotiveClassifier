@@ -5,8 +5,8 @@
 #Secrets
 .env
 
-#Dependencies
-#none yet.
+#Datasets -- Preventative
+./data
 
 #Personal FIles
 /guides
