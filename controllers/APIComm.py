@@ -58,3 +58,11 @@ def download_dataset():
 
     except FileNotFoundError:
         print("Error: 'kaggle' command not found. Ensure the Kaggle CLI is installed and in your PATH.")
+
+
+def delete_dataset():
+    if os.path.exists(DOWNLOAD_DIR):
+        print(f"Deleting dataset directory '{DOWNLOAD_DIR}'...")
+        os.rmdir(DOWNLOAD_DIR)
+    else:
+        print(f"Dataset directory '{DOWNLOAD_DIR}' does not exist. Skipping deletion.")
