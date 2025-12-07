@@ -17,6 +17,8 @@ import pandas as pd
 import torch
 from torchvision import transforms
 
+
+
 def get_datasheet(image_path: str):
     """
     Reads a CSV datasheet corresponding to a given image path. The method determines whether
@@ -61,15 +63,19 @@ def get_bounding_box(datasheet: pd.DataFrame, image_path: str):
 
 def crop_dataset_image(datasheet: pd.DataFrame, image_path: str):
     """
-    Crops a region of interest from an image using bounding box coordinates derived
-    from the provided datasheet and converts the cropped image to RGB format.
+    Crops and processes an image based on the bounding box obtained from a dataset.
 
-    :param datasheet: Pandas DataFrame containing the data used to determine the
-        bounding box for cropping the image.
-        Type hints enforce ensuring the correctness of inputs.
-    :param image_path: The path of the image for which the bounding box
-        coordinates are to be cropped into the image.
+    The function reads an image, computes a bounding box from the datasheet, crops
+    the image to the bounding box dimensions, converts it to RGB  format, and then
+    converts it into a tensor preparation for further processing.
+
+    :param datasheet: A pandas DataFrame containing metadata provided by KaggleAPI
+    :type datasheet: pandas.DataFrame
+    :param image_path: The file path to the image that is to be processed. It should point to a valid image file.
     :type image_path: str
+    :return: A tensor object that represents the processed version of the cropped RGB image.
+    :rtype: torch.Tensor
+    :raises FileNotFoundError: If the image could not be found at the specified `image_path`.
     """
 
     img_bgr = cv.imread(image_path)
@@ -83,9 +89,11 @@ def crop_dataset_image(datasheet: pd.DataFrame, image_path: str):
         print(f"Warning: Empty crop for {image_path}. BBox: {x_min, y_min, x_max, y_max}")
         crop_img_bgr = img_bgr
 
-    return cv.cvtColor(crop_img_bgr, cv.COLOR_BGR2RGB)
+    img_rgb =  cv.cvtColor(crop_img_bgr, cv.COLOR_BGR2RGB)
 
-def normalize_image(img : np.ndarray, target_size = 224):
+    return transforms.ToTensor()(img_rgb)
+
+def normalize_image(img : torch.Tensor, target_size = 224):
     """
     Normalizes an input image to the specified target size and
     applies Imagenet normalization. The function resizes an image to the target
@@ -99,13 +107,33 @@ def normalize_image(img : np.ndarray, target_size = 224):
     :return: Normalized image as a tensor.
     :rtype: torch.Tensor
     """
-    resized_img = cv.resize(
-        img,
-        (target_size, target_size),
-        interpolation=cv.INTER_AREA
-    )
+    normalization = transforms.Compose([
+        transforms.Resize((target_size, target_size)),  # Re-scale to final size if augmentation changed it
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])#IMG_NET values
+    ])
 
-    tensor_img = transforms.ToTensor()(resized_img)
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(tensor_img)#IMG_NET values
+    return normalization(img)
 
-    return normalize(tensor_img)
+def augment_image(img : torch.Tensor):
+    """
+    Applies a sequence of data augmentation transformations to an input image.
+
+    This function performs random rotation, affine transformations (with
+    random translation and scaling), horizontal flipping with a fixed
+    probability, and color jittering (adjusting brightness, contrast,
+    saturation, and hue).
+
+    :param img: A tensor representing an image to be augmented. It is expected
+        to conform to the input format required by torchvision.transforms.
+    :type img: torch.Tensor
+    :return: The augmented image after applying the transformations.
+    :rtype: torch.Tensor
+    """
+    augmentation = transforms.Compose([
+        transforms.RandomRotation(degrees=(-15, 15)),
+        transforms.RandomAffine(degrees=(-15, 15), translate=(0.1, 0.1), scale=(0.9, 1.1)),
+        transforms.RandomHorizontalFlip(p=0.4),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.1, hue=0.1)
+    ])
+
+    return augmentation(img)
