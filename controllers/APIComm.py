@@ -12,6 +12,7 @@ License: MIT - ALL RIGHTS RESERVED
 
 #Imports
 import os
+import shutil
 import subprocess
 import zipfile
 from dotenv import load_dotenv
@@ -25,14 +26,25 @@ subprocess_env = os.environ.copy()
 subprocess_env['KAGGLE_USERNAME'] = os.getenv('KAGGLE_API_USER')
 subprocess_env['KAGGLE_KEY'] = os.getenv('KAGGLE_API_TOKEN')
 
-
 def download_dataset():
+    """
+    Downloads and extracts a Kaggle dataset to a specified directory.
+
+    This function first checks if the download directory already exists. If it does, it prints a message
+    and exits. Otherwise, it proceeds to download the dataset using the Kaggle CLI, extracts the contents
+    of the downloaded zip file, and then removes the zip file to save disk space.
+
+    Raises:
+        subprocess.CalledProcessError: If the Kaggle CLI command fails.
+        FileNotFoundError: If the 'kaggle' command is not found in the system's PATH.
+    """
+
     # Create the data directory if it doesn't exist'
     if not os.path.exists(DOWNLOAD_DIR):
         os.makedirs(DOWNLOAD_DIR)
     else:
         print(f"Data directory '{DOWNLOAD_DIR}' already exists. Skipping download. If you think this is an error, delete the directory and try again.")
-        exit(-1)
+        return
 
     # Construct the download command
     command_list = [
@@ -81,11 +93,17 @@ def download_dataset():
 
 
 def delete_dataset():
+    """
+    Deletes the downloaded dataset directory and its contents.
+
+    This function checks if the `DOWNLOAD_DIR` exists. If it does, it iterates through
+    all files within the directory, removes them, and then removes the directory itself.
+    If the directory does not exist, it prints a message indicating that deletion is skipped.
+    """
+
     if os.path.exists(DOWNLOAD_DIR):
         print(f"Deleting dataset directory '{DOWNLOAD_DIR}'...")
-        for filepath in os.listdir(DOWNLOAD_DIR):
-            os.remove(DOWNLOAD_DIR + "\{}".format(filepath))
-        os.rmdir(DOWNLOAD_DIR)
+        shutil.rmtree(DOWNLOAD_DIR)
         print(f"Deletion of dataset directory '{DOWNLOAD_DIR}' successful.")
     else:
         print(f"Dataset directory '{DOWNLOAD_DIR}' does not exist. Skipping deletion.")
