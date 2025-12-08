@@ -20,6 +20,7 @@ from controllers.CarMakeData import car_brands
 SOURCE_DIR = Path("./data/stanford_cars/car_data/car_data")
 TARGET_DIR = Path("./data/filtered_cars")
 SHEETS_DIR = Path("./data/stanford_cars/")
+SHEETS_TARGET_DIR = Path("./data/")
 DATA_SPLITS = ["train", "test"]
 
 
@@ -76,4 +77,4 @@ def move_sheets():
         file paths.
     """
     for sheet in SHEETS_DIR.glob("*.csv"):
-        shutil.move(sheet, TARGET_DIR)
+        shutil.move(sheet, SHEETS_TARGET_DIR)

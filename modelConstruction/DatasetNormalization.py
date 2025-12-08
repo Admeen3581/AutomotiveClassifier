@@ -12,7 +12,6 @@ License: MIT - ALL RIGHTS RESERVED
 
 #Imports
 import cv2 as cv
-import numpy as np
 import pandas as pd
 import torch
 from torchvision import transforms
@@ -31,7 +30,7 @@ def get_datasheet(image_path: str):
     """
 
     split = image_path.split("/")[3]#test or train
-    datasheet = pd.read_csv(f"./data/filtered_cars/anno_{split}.csv", header=None)
+    datasheet = pd.read_csv(f"./data/anno_{split}.csv", header=None)
     datasheet.columns = ['image_path', 'x_min', 'y_min', 'x_max', 'y_max', 'class_id']
     return datasheet
 
