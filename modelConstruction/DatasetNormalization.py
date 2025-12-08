@@ -17,23 +17,6 @@ import torch
 from torchvision import transforms
 
 
-
-def get_datasheet(image_path: str):
-    """
-    Reads a CSV datasheet corresponding to a given image path. The method determines whether
-    the image path corresponds to 'test' or 'train' and fetches the relevant CSV file.
-
-    :param image_path: The path to an image file as a string. Must be of path 'train' or 'test'.
-    :type image_path: str
-    :return: A pandas DataFrame containing the data read from the appropriate CSV file.
-    :rtype: pandas.DataFrame
-    """
-
-    split = image_path.split("/")[3]#test or train
-    datasheet = pd.read_csv(f"./data/anno_{split}.csv", header=None)
-    datasheet.columns = ['image_path', 'x_min', 'y_min', 'x_max', 'y_max', 'class_id']
-    return datasheet
-
 def get_bounding_box(datasheet: pd.DataFrame, image_path: str):
     """
     Extracts the bounding box coordinates for a given image from a dataset.
