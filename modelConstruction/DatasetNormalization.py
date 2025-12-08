@@ -31,7 +31,9 @@ def get_datasheet(image_path: str):
     """
 
     split = image_path.split("/")[3]#test or train
-    return pd.read_csv(f"./data/filtered_cars/anno_{split}.csv", header=None)
+    datasheet = pd.read_csv(f"./data/filtered_cars/anno_{split}.csv", header=None)
+    datasheet.columns = ['image_path', 'x_min', 'y_min', 'x_max', 'y_max', 'class_id']
+    return datasheet
 
 def get_bounding_box(datasheet: pd.DataFrame, image_path: str):
     """
