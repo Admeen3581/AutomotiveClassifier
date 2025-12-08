@@ -32,7 +32,7 @@ def get_bounding_box(datasheet: pd.DataFrame, image_path: str):
     :raises ValueError: If the image path is not found in the dataset.
     """
 
-    image_data = datasheet[datasheet[0] == image_path.split()[-1]]
+    image_data = datasheet[datasheet['image_path'] == image_path.split("/")[-1]]
     if image_data.empty:
         raise ValueError(f"Image {image_path} not found in the dataset.")
 

@@ -14,6 +14,8 @@ License: MIT - ALL RIGHTS RESERVED
 import os
 import shutil
 from pathlib import Path
+
+from controllers.CSVFiltering import process_csv
 from controllers.CarMakeData import car_brands
 
 #Constants
@@ -59,6 +61,7 @@ def reorganize_dataset():
 
 
     move_sheets()
+    process_csv()
 
 def move_sheets():
     """

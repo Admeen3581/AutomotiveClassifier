@@ -9,6 +9,7 @@ Contributors:
 
 License: MIT - ALL RIGHTS RESERVED
 """
+import os
 
 #Imports
 import torch
@@ -22,17 +23,18 @@ from controllers.CarMakeData import car_brands
 
 #Constants
 BATCH_SIZE = 32
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.002
 NUM_EPOCHS = 20
 NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+MODEL_EXPORT_PATH = "./data/car_classifier.pth"
 
 def train_model():
 
     datasheet = get_datasheet()#default is training datasheet
 
     train_dataset = CarPartDataset(datasheet, True)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
 
     #Initialize Model
     model = get_pretrained_model()
@@ -43,13 +45,17 @@ def train_model():
 
     optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=LEARNING_RATE)
 
+    print("\n\t---Training Started---\n")
+
     for epoch in range(NUM_EPOCHS):
+        print(f"\nEpoch {epoch + 1}\n-------------------------------")
         model.train()
         running_loss = 0.0
         correct = 0
         total = 0
 
         for images, labels in train_loader:
+            print("batch loop")
             #Transfer CPU/GPU data
             images, labels = images.to(DEVICE), labels.to(DEVICE)
 
@@ -69,9 +75,13 @@ def train_model():
             correct += (predicted == labels).sum().item()
 
         epoch_accuracy = 100 * correct / total
-        print(f"Epoch [{epoch + 1}/{NUM_EPOCHS}] Loss: {running_loss / len(train_loader):.4f} | Acc: {epoch_accuracy:.2f}%")
+        print(f"Epoch [{epoch + 1}/{NUM_EPOCHS}] Loss: {running_loss / len(train_loader):.4f} | Accuracy: {epoch_accuracy:.2f}%")
 
     print("\n\t---Training Complete---\n")
+
+    os.makedirs(os.path.dirname(MODEL_EXPORT_PATH), exist_ok=True)
+    torch.save(model.state_dict(), MODEL_EXPORT_PATH)
+    print(f"Model saved to {MODEL_EXPORT_PATH}")
 
 
 def get_datasheet(csv_path: str = "./data/anno_train_filtered.csv"):

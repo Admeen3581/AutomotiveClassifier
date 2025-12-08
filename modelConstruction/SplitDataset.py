@@ -32,7 +32,7 @@ class CarPartDataset(Dataset):
         #get row of datasheet as needed.
         row = self.datasheet.iloc[idx]
         #grabs the image path for the various image.
-        image_path = f"./data/filtered_cars/train/{row[0]}"
+        image_path = f"./data/filtered_cars/train/{row['image_path']}"
 
         image_tensor = crop_dataset_image(self.datasheet, image_path)
 
@@ -41,6 +41,6 @@ class CarPartDataset(Dataset):
 
         image_tensor = normalize_image(image_tensor)
 
-        label = row[5]
+        label = row['class_id']
 
         return image_tensor, torch.tensor(label, dtype=torch.long)
