@@ -54,11 +54,9 @@ def reorganize_dataset():
 
             #Filters out removed makes from dataset
             if car_make in car_brands:
-                make_dest_dir = current_target_dir / car_make
-                os.makedirs(make_dest_dir, exist_ok=True)
-
                 for image_file in folder.glob("*.jpg"):
-                    shutil.copy2(image_file, make_dest_dir / image_file.name)
+                    shutil.copy2(image_file, current_target_dir / image_file.name)
+
 
     move_sheets()
 
