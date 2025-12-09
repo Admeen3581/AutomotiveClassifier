@@ -9,17 +9,18 @@ Contributors:
 
 License: MIT - ALL RIGHTS RESERVED
 """
-import os
 
 #Imports
 import torch
 import torch.optim as optim
 import pandas as pd
 import torch.utils.data
+import os
 
 from modelConstruction.SplitDataset import CarPartDataset
 from modelConstruction.ModelConfiguration import get_pretrained_model
 from controllers.CarMakeData import car_brands
+from tqdm import tqdm
 
 #Constants
 BATCH_SIZE = 32
@@ -34,7 +35,7 @@ def train_model():
     datasheet = get_datasheet()#default is training datasheet
 
     train_dataset = CarPartDataset(datasheet, True)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, persistent_workers=True)
 
     #Initialize Model
     model = get_pretrained_model()
@@ -54,14 +55,16 @@ def train_model():
         correct = 0
         total = 0
 
-        for images, labels in train_loader:
-            print("batch loop")
+        loop = tqdm(train_loader, desc=f"Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
+
+        for images, labels in loop:
             #Transfer CPU/GPU data
             images, labels = images.to(DEVICE), labels.to(DEVICE)
 
             #Forward Pass
-            outputs = model(images)
-            loss = criterion(outputs, labels)
+            with torch.autocast(device_type=DEVICE.type, dtype=torch.bfloat16):
+                outputs = model(images)
+                loss = criterion(outputs, labels)
 
             #Backward Pass
             optimizer.zero_grad()
