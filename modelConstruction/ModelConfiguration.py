@@ -17,6 +17,19 @@ from controllers.CarMakeData import car_brands
 
 
 def get_pretrained_model():
+    """
+    Retrieve and customize a pretrained ResNet101 model.
+
+    The function initializes a ResNet101 model pretrained on a standard dataset
+    (defined by `ResNet101_Weights.DEFAULT`). The model's parameters are frozen
+    to prevent gradients from being computed during backward pass, except for
+    the parameters of the fourth layer (`layer4`), which are unfrozen to allow
+    fine-tuning. Additionally, the original fully connected (fc) layer is replaced
+    with a custom sequential block of layers for a specific output configuration.
+
+    :rtype: torch.nn.Module
+    :return: A modified ResNet101 model with a custom fully connected layer.
+    """
 
     #Using ResNet101 as the pretrained model.
     model = models.resnet101(weights=models.ResNet101_Weights.DEFAULT)

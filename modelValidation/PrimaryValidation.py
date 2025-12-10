@@ -24,6 +24,21 @@ from modelConstruction.PartDataset import CarPartDataset
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str = "./model/car_classifier.pt"):
+    """
+    Validates the performance of a pretrained machine learning model on a dataset.
+
+    The function evaluates a given machine learning model on a dataset by calculating
+    its accuracy. It accepts a dataset in the form of a pandas DataFrame and performs
+    validation using a pre-defined model. A test DataLoader is created for loading
+    the dataset in batches, and the model is evaluated for correctness by comparing
+    predicted outputs with labeled data.
+
+    :param datasheet: A pandas DataFrame containing the dataset for testing.
+    :param workers: Number of parallel data loading workers. Defaults to 2.
+    :param model_path: Path to the pre-saved model checkpoint. Defaults to
+        "./model/car_classifier.pt".
+    :return: None
+    """
 
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model path at {model_path} not found.")
