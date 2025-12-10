@@ -28,9 +28,16 @@ NUM_EPOCHS = 25
 NUM_SCHEDULE_CHUNKS = 4
 NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_EXPORT_PATH = "./data/car_classifier.pt"
+MODEL_EXPORT_PATH = "./model/car_classifier.pt"
 
-def train_model(datasheet: pd.DataFrame, workers: int = 2):
+def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MODEL_EXPORT_PATH):
+
+    #Model Path Logic
+    if not os.path.exists(model_path):
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    else:
+        if not model_path.endswith(".pt"):
+            raise ValueError("Model path must end with extension '.pt'.")
 
     print("\n\t---Training Started---\n")
 

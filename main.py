@@ -11,6 +11,7 @@ License: MIT - ALL RIGHTS RESERVED
 """
 
 #Imports
+from modelValidation.PrimaryValidation import *
 from modelConstruction.DatasetInitialization import *
 from modelConstruction.ModelTraining import *
 
@@ -19,4 +20,9 @@ if __name__ == '__main__':
 
     dataset_init()
 
-    train_model(get_datasheet(), 4)
+    ds = get_datasheet()
+
+    if not os.path.exists("./model/car_classifier(best).pt"):
+        train_model(ds, 4)
+
+    validate_model(ds)
