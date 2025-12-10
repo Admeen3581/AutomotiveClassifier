@@ -17,7 +17,6 @@ from modelConstruction.DatasetNormalization import *
 
 class CarPartDataset(Dataset):
     def __init__(self, datasheet, is_training=True):
-        self.datasheet = datasheet#call the datasheet funcy wuncy
         self.is_training = is_training
 
         self.datasheet_samples = []
@@ -25,16 +24,17 @@ class CarPartDataset(Dataset):
         for _, row in datasheet.iterrows():
             path = f"./data/filtered_cars/train/{row['image_path']}"
             label = row['class_id']
-            self.datasheet_samples.append((path, label, row))
+            self.datasheet_samples.append((path, label))
 
     def __len__(self):
         return len(self.datasheet_samples)
 
     def __getitem__(self, idx):
         #get row of datasheet as needed.
-        image_path, label, row = self.datasheet_samples[idx]
+        image_path, label = self.datasheet_samples[idx]
 
-        image_tensor = crop_dataset_image(row, image_path)
+        img = cv.cvtColor(cv.imread(image_path), cv.COLOR_BGR2RGB)
+        image_tensor = transforms.ToTensor()(img)
 
         if self.is_training:
             image_tensor = augment_image(image_tensor)

@@ -11,16 +11,18 @@ License: MIT - ALL RIGHTS RESERVED
 """
 
 #Imports
-from controllers.APIComm import *
-from controllers.DatasetFiltering import *
+from modelConstruction.DatasetInitialization import *
 from modelConstruction.ModelTraining import *
 
+
+def get_datasheet(csv_path: str = "./data/anno_train_filtered.csv"):
+    datasheet = pd.read_csv(csv_path, header=None)
+    datasheet.columns = ['image_path', 'x_min', 'y_min', 'x_max', 'y_max', 'class_id']
+    return datasheet
 
 if __name__ == '__main__':
     print("Hello World")
 
-    download_dataset()
-    reorganize_dataset()
-    delete_dataset()
+    dataset_init(get_datasheet())
 
-    train_model()
+    train_model(get_datasheet())

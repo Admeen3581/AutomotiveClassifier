@@ -16,22 +16,18 @@ import torch
 from torchvision import transforms
 
 
-def get_bounding_box(row: list, image_path: str):
+def get_bounding_box(row: list):
     """
-    Extracts and returns the bounding box coordinates from a given row of data.
+    Extracts the bounding box coordinates from a given data row.
 
-    This function assumes the input row contains the coordinates (x_min, y_min,
-    x_max, y_max) that indicate the bounding box within an image. It returns
-    these coordinates as a tuple to represent the bounding box.
+    This function reads coordinate values from a provided data row.
+    It returns the extracted bounding box coordinates as a tuple.
 
-    :param row: List of data containing bounding box coordinates.
-    :           Expected keys: 'x_min', 'y_min', 'x_max', 'y_max'.
+    :param row: A dictionary containing bounding box coordinates with keys
+        'x_min', 'y_min', 'x_max', and 'y_max'.
     :type row: list
-    :param image_path: The path to the target image to which the bounding box
-    :                  coordinates correspond.
-    :type image_path: str
-    :return: A tuple containing the bounding box coordinates
-    :        (x_min, y_min, x_max, y_max).
+    :return: A tuple containing the bounding box coordinates in the order
+        (x_min, y_min, x_max, y_max).
     :rtype: tuple
     """
 
@@ -45,36 +41,32 @@ def get_bounding_box(row: list, image_path: str):
 
 def crop_dataset_image(row: list, image_path: str):
     """
-    Crops and processes an image based on the bounding box obtained from a dataset.
+    Crops an image based on the bounding box defined by the input data.
 
-    The function reads an image, computes a bounding box from the datasheet, crops
-    the image to the bounding box dimensions, converts it to RGB  format, and then
-    converts it into a tensor preparation for further processing.
+    This function performs image preprocessing by reading an image from a specified path, extracting
+    a region from the image defined by bounding box coordinates, resizing the region to the required
+    dimensions, converting color format for consistency, and saving the processed result over the
+    original input file.
 
-    :param row:
-    :param datasheet: A pandas DataFrame containing metadata provided by KaggleAPI
-    :type datasheet: pandas.DataFrame
-    :param image_path: The file path to the image that is to be processed. It should point to a valid image file.
+    :param row: List containing the bounding box coordinates used to define the region
+        of interest in the format [x_min, y_min, x_max, y_max].
+    :type row: list
+    :param image_path: Path to the image file that will be cropped and scaled.
     :type image_path: str
-    :return: A tensor object that represents the processed version of the cropped RGB image.
-    :rtype: torch.Tensor
-    :raises FileNotFoundError: If the image could not be found at the specified `image_path`.
+
+    :raises FileNotFoundError: If the image file cannot be located using the given file path.
     """
 
     img_bgr = cv.imread(image_path)
     if img_bgr is None:
         raise FileNotFoundError(f"Image not found at {image_path}.")
 
-    x_min, y_min, x_max, y_max = get_bounding_box(row, image_path)
+    x_min, y_min, x_max, y_max = get_bounding_box(row)
+    cropped_img_bgr = img_bgr[y_min:y_max, x_min:x_max]
+    scaled_img = cv.resize(cropped_img_bgr, (224,224), interpolation=cv.INTER_AREA)
 
-    crop_img_bgr = img_bgr[y_min:y_max, x_min:x_max] #crops to bounding box <- (for model accuracy)
-    if img_bgr.size == 0: #failsafe incase of faulty bounds
-        print(f"Warning: Empty crop for {image_path}. BBox: {x_min, y_min, x_max, y_max}")
-        crop_img_bgr = img_bgr
-
-    img_rgb =  cv.cvtColor(crop_img_bgr, cv.COLOR_BGR2RGB)
-
-    return transforms.ToTensor()(img_rgb)
+    cv.cvtColor(scaled_img, cv.COLOR_BGR2RGB)
+    cv.imwrite(image_path, scaled_img)
 
 def normalize_image(img : torch.Tensor, target_size = 224):
     """

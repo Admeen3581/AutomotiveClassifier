@@ -30,9 +30,7 @@ NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_EXPORT_PATH = "./car_classifier.pt"
 
-def train_model():
-
-    datasheet = get_datasheet()#default is training datasheet
+def train_model(datasheet: pd.DataFrame):
 
     train_dataset = CarPartDataset(datasheet, True)
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, persistent_workers=True)
@@ -85,9 +83,3 @@ def train_model():
     os.makedirs(os.path.dirname(MODEL_EXPORT_PATH), exist_ok=True)
     torch.save(model.state_dict(), MODEL_EXPORT_PATH)
     print(f"Model saved to {MODEL_EXPORT_PATH}")
-
-
-def get_datasheet(csv_path: str = "./data/anno_train_filtered.csv"):
-    datasheet = pd.read_csv(csv_path, header=None)
-    datasheet.columns = ['image_path', 'x_min', 'y_min', 'x_max', 'y_max', 'class_id']
-    return datasheet

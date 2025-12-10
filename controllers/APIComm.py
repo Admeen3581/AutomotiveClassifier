@@ -11,11 +11,10 @@ License: MIT - ALL RIGHTS RESERVED
 """
 
 #Imports
-import os
-import shutil
 import subprocess
 import zipfile
 from dotenv import load_dotenv
+from controllers.DatasetFiltering import *
 
 #Constants
 DATASET_ID = 'jutrera/stanford-car-dataset-by-classes-folder'
@@ -90,6 +89,8 @@ def download_dataset():
         print(f"Cleaned up the ZIP file.")
     else:
         print(f"Could not find the downloaded zip file at {zip_path}. Check for typos in the dataset ID.")
+
+    reorganize_dataset()
 
 
 def delete_dataset():
