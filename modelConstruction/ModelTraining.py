@@ -23,7 +23,7 @@ from controllers.CarMakeData import car_brands
 from tqdm import tqdm
 
 #Constants
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 LEARNING_RATE = 0.01
 NUM_EPOCHS = 20
 NUM_CLASSES = len(car_brands)
