@@ -30,7 +30,15 @@ def dataset_init():
     :return: None
     """
 
+    # Create the data directory if it doesn't exist'
+    if not os.path.exists(DOWNLOAD_DIR):
+        os.makedirs(DOWNLOAD_DIR)
+    else:
+        print(f"Data directory '{DOWNLOAD_DIR}' already exists. Skipping download. If you think this is an error, delete the directory and try again.")
+        return
+
     download_dataset()
+    reorganize_dataset()
     delete_dataset()
 
     #Now that we have data, lets get the training datasheet.

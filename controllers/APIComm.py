@@ -38,13 +38,6 @@ def download_dataset():
         FileNotFoundError: If the 'kaggle' command is not found in the system's PATH.
     """
 
-    # Create the data directory if it doesn't exist'
-    if not os.path.exists(DOWNLOAD_DIR):
-        os.makedirs(DOWNLOAD_DIR)
-    else:
-        print(f"Data directory '{DOWNLOAD_DIR}' already exists. Skipping download. If you think this is an error, delete the directory and try again.")
-        return
-
     # Construct the download command
     command_list = [
         'kaggle',
@@ -89,8 +82,6 @@ def download_dataset():
         print(f"Cleaned up the ZIP file.")
     else:
         print(f"Could not find the downloaded zip file at {zip_path}. Check for typos in the dataset ID.")
-
-    reorganize_dataset()
 
 
 def delete_dataset():
