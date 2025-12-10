@@ -55,6 +55,9 @@ def dataset_init():
 
 
 def get_datasheet(csv_path: str = "./data/anno_train_filtered.csv"):
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"Could not find CSV file at {csv_path}. Possible a dataset API call issue.")
+
     datasheet = pd.read_csv(csv_path, header=None)
     datasheet.columns = ['image_path', 'x_min', 'y_min', 'x_max', 'y_max', 'class_id']
     return datasheet
