@@ -16,7 +16,7 @@ from modelConstruction.DatasetInitialization import *
 from modelConstruction.ModelTraining import *
 
 #Constants
-MODEL_PATH = "./model/car_classifier(best).pt"
+MODEL_PATH = "./model/car_classifier.pt"
 
 if __name__ == '__main__':
     print("Hello There :)\nVehicular Classifier Ver.1.1\n\n\t---Initializing---\n\n")

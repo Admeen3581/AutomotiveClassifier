@@ -21,7 +21,7 @@ from modelConstruction.DatasetNormalization import crop_dataset_image
 from modelConstruction.PartDataset import CarPartDataset
 
 #Constants
-DEVICE = 'cpu'
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str = "./model/car_classifier.pt"):
 
@@ -44,7 +44,7 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
     model = get_pretrained_model()
     model = model.to(DEVICE)
 
-    model.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)
+    model.load_state_dict(torch.load(model_path, map_location=DEVICE), strict=False)
 
     #Change PyTorch to evaluation mode
     model.eval()
