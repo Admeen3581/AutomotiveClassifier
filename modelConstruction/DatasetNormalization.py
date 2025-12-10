@@ -105,10 +105,10 @@ def augment_image(img : torch.Tensor):
     :rtype: torch.Tensor
     """
     augmentation = transforms.Compose([
-        transforms.RandomRotation(degrees=(-10, 10)),
-        transforms.RandomAffine(degrees=(-10, 10), translate=(0.1, 0.1), scale=(0.9, 1.1)),
-        transforms.RandomHorizontalFlip(p=0.4),
-        transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.05, hue=0.05)
+        transforms.RandomRotation(degrees=(-15, 15)),
+        transforms.RandomAffine(degrees=(-15, 15), translate=(0.15, 0.15), scale=(0.8, 1.2)),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.05, hue=0.1)
     ])
 
     return augmentation(img)

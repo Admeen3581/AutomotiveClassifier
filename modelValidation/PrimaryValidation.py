@@ -34,7 +34,7 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
         batch_size=32,
         shuffle=False,
         num_workers=workers,
-        persistent_workers=True,
+        persistent_workers=(workers > 0),
     )
 
     crop_test_image(datasheet)

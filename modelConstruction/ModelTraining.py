@@ -33,11 +33,9 @@ MODEL_EXPORT_PATH = "./model/car_classifier.pt"
 def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MODEL_EXPORT_PATH):
 
     #Model Path Logic
-    if not os.path.exists(model_path):
-        os.makedirs(os.path.dirname(model_path), exist_ok=True)
-    else:
-        if not model_path.endswith(".pt"):
-            raise ValueError("Model path must end with extension '.pt'.")
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    if not model_path.endswith(".pt"):
+        raise ValueError("Model path must end with extension '.pt'.")
 
     print("\n\t---Training Started---\n")
 
@@ -47,7 +45,7 @@ def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MOD
         batch_size=BATCH_SIZE,
         shuffle=True,
         num_workers=workers,
-        persistent_workers=True,
+        persistent_workers=(workers > 0),
         pin_memory=True)
 
     #Initialize Model
@@ -95,6 +93,10 @@ def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MOD
 
             epoch_accuracy = 100 * correct / total
             print(f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}] | Loss: {running_loss / len(train_loader):.4f} | Accuracy: {epoch_accuracy:.2f}%")
+
+            #Validate Epoch
+            model.eval()
+
 
 
 

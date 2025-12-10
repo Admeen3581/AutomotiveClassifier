@@ -1,3 +1,3 @@
 During developing.
 
-Note: Model doesn't currently support individual images not included in the dataset.
+Note: Ability to insert non-dataset images not implemented.

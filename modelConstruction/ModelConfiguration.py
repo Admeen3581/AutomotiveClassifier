@@ -18,14 +18,29 @@ from controllers.CarMakeData import car_brands
 
 def get_pretrained_model():
 
-    #Using ResNet50 as the pretrained model.
+    #Using ResNet101 as the pretrained model.
     model = models.resnet101(weights=models.ResNet101_Weights.DEFAULT)
 
     for param in model.parameters():
         param.requires_grad = False
 
-    #Replace final FC layer with CarMakeData.py.length number of outputs.
+    #Unfreeze layers allowing for more fine tuning options.
+    for param in model.layer4.parameters():
+        param.requires_grad = True
+
+    #Add a custom layer
     num_features = model.fc.in_features
-    model.fc = nn.Linear(num_features, len(car_brands))
+    model.fc = nn.Sequential(
+        nn.Linear(num_features, 512),
+        nn.BatchNorm1d(512),
+        nn.ReLU(inplace=True),
+        nn.Dropout(p=0.5),
+        nn.Linear(512, 256),
+        nn.BatchNorm1d(256),
+        nn.ReLU(inplace=True),
+        nn.Dropout(p=0.5),
+        nn.Linear(256, 40),
+
+    )
 
     return model
