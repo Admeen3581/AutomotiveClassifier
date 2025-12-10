@@ -12,40 +12,38 @@ License: MIT - ALL RIGHTS RESERVED
 
 #Imports
 import cv2 as cv
-import pandas as pd
 import torch
 from torchvision import transforms
 
 
-def get_bounding_box(datasheet: pd.DataFrame, image_path: str):
+def get_bounding_box(row: list, image_path: str):
     """
-    Extracts the bounding box coordinates for a given image from a dataset.
+    Extracts and returns the bounding box coordinates from a given row of data.
 
-    :param datasheet: The DataFrame containing the bounding box data, where
-        each row corresponds to a specific image.
-    :param image_path: The path of the image for which the bounding box
-        coordinates are to be extracted.
+    This function assumes the input row contains the coordinates (x_min, y_min,
+    x_max, y_max) that indicate the bounding box within an image. It returns
+    these coordinates as a tuple to represent the bounding box.
+
+    :param row: List of data containing bounding box coordinates.
+    :           Expected keys: 'x_min', 'y_min', 'x_max', 'y_max'.
+    :type row: list
+    :param image_path: The path to the target image to which the bounding box
+    :                  coordinates correspond.
     :type image_path: str
     :return: A tuple containing the bounding box coordinates
-        (x_min, y_min, x_max, y_max).
+    :        (x_min, y_min, x_max, y_max).
     :rtype: tuple
-    :raises ValueError: If the image path is not found in the dataset.
     """
 
-    image_data = datasheet[datasheet['image_path'] == image_path.split("/")[-1]]
-    if image_data.empty:
-        raise ValueError(f"Image {image_path} not found in the dataset.")
-
-    coordinates = image_data.iloc[0][1:5].tolist()
-
-    x_min = coordinates[0]
-    y_min = coordinates[1]
-    x_max = coordinates[2]
-    y_max = coordinates[3]
+    # Extract the coordinates from the row
+    x_min = row['x_min']
+    y_min = row['y_min']
+    x_max = row['x_max']
+    y_max = row['y_max']
 
     return x_min, y_min, x_max, y_max
 
-def crop_dataset_image(datasheet: pd.DataFrame, image_path: str):
+def crop_dataset_image(row: list, image_path: str):
     """
     Crops and processes an image based on the bounding box obtained from a dataset.
 
@@ -53,6 +51,7 @@ def crop_dataset_image(datasheet: pd.DataFrame, image_path: str):
     the image to the bounding box dimensions, converts it to RGB  format, and then
     converts it into a tensor preparation for further processing.
 
+    :param row:
     :param datasheet: A pandas DataFrame containing metadata provided by KaggleAPI
     :type datasheet: pandas.DataFrame
     :param image_path: The file path to the image that is to be processed. It should point to a valid image file.
@@ -63,10 +62,10 @@ def crop_dataset_image(datasheet: pd.DataFrame, image_path: str):
     """
 
     img_bgr = cv.imread(image_path)
-    if(img_bgr is None):
+    if img_bgr is None:
         raise FileNotFoundError(f"Image not found at {image_path}.")
 
-    x_min, y_min, x_max, y_max = get_bounding_box(datasheet, image_path)
+    x_min, y_min, x_max, y_max = get_bounding_box(row, image_path)
 
     crop_img_bgr = img_bgr[y_min:y_max, x_min:x_max] #crops to bounding box <- (for model accuracy)
     if img_bgr.size == 0: #failsafe incase of faulty bounds

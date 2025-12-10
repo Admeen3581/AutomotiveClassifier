@@ -24,11 +24,11 @@ from tqdm import tqdm
 
 #Constants
 BATCH_SIZE = 32
-LEARNING_RATE = 0.002
+LEARNING_RATE = 0.01
 NUM_EPOCHS = 20
 NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_EXPORT_PATH = "./data/car_classifier.pth"
+MODEL_EXPORT_PATH = "./car_classifier.pt"
 
 def train_model():
 
