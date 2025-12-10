@@ -71,9 +71,9 @@ def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MOD
             correct = 0
             total = 0
 
-            loop = tqdm(train_loader, desc=f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
+            progbar = tqdm(train_loader, desc=f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
 
-            for images, labels in loop:
+            for images, labels in progbar:
                 #Transfer CPU/GPU data
                 images, labels = images.to(DEVICE), labels.to(DEVICE)
 
