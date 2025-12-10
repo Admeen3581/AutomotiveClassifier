@@ -16,6 +16,7 @@ import torch.utils.data
 import os
 import tqdm
 
+from modelValidation.BuildConfusionMatrix import build_matrix
 from modelConstruction.ModelConfiguration import get_pretrained_model
 from modelConstruction.DatasetNormalization import crop_dataset_image
 from modelConstruction.PartDataset import CarPartDataset
@@ -23,7 +24,7 @@ from modelConstruction.PartDataset import CarPartDataset
 #Constants
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str = "./model/car_classifier.pt"):
+def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str = "./model/car_classifier.pt", show_matrix: bool = False):
     """
     Validates the performance of a pretrained machine learning model on a dataset.
 
@@ -85,6 +86,9 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
             accuracy = 100 * correct / total
 
     print(f"Test Accuracy: {accuracy:.2f}%")
+
+    #Build & Show confusion matrix
+    build_matrix(all_preds, all_labels)
 
 
 def crop_test_image(datasheet : pd.DataFrame):
