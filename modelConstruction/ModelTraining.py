@@ -28,9 +28,16 @@ NUM_EPOCHS = 25
 NUM_SCHEDULE_CHUNKS = 4
 NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_EXPORT_PATH = "./data/car_classifier.pt"
+MODEL_EXPORT_PATH = "./model/car_classifier.pt"
 
-def train_model(datasheet: pd.DataFrame, workers: int = 2):
+def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MODEL_EXPORT_PATH):
+
+    #Model Path Logic
+    if not os.path.exists(model_path):
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    else:
+        if not model_path.endswith(".pt"):
+            raise ValueError("Model path must end with extension '.pt'.")
 
     print("\n\t---Training Started---\n")
 
@@ -64,9 +71,9 @@ def train_model(datasheet: pd.DataFrame, workers: int = 2):
             correct = 0
             total = 0
 
-            loop = tqdm(train_loader, desc=f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
+            progbar = tqdm(train_loader, desc=f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
 
-            for images, labels in loop:
+            for images, labels in progbar:
                 #Transfer CPU/GPU data
                 images, labels = images.to(DEVICE), labels.to(DEVICE)
 
