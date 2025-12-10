@@ -1,5 +1,5 @@
 """
-SplitDataset.py
+PartDataset.py
 Description: Parts the dataset as required by PyTorch.
 
 Contributors:

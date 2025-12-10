@@ -31,7 +31,7 @@ def get_bounding_box(row: list):
     :rtype: tuple
     """
 
-    # Extract the coordinates from the row
+    #Extract the coordinates from the row
     x_min = row['x_min']
     y_min = row['y_min']
     x_max = row['x_max']
@@ -83,7 +83,7 @@ def normalize_image(img : torch.Tensor, target_size = 224):
     :rtype: torch.Tensor
     """
     normalization = transforms.Compose([
-        transforms.Resize((target_size, target_size)),  # Re-scale to final size if augmentation changed it
+        transforms.Resize((target_size, target_size)),#Re-scale to final size if augmentation changed it
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])#IMG_NET values
     ])
 

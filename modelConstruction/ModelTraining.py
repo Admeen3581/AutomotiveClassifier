@@ -17,7 +17,7 @@ import pandas as pd
 import torch.utils.data
 import os
 
-from modelConstruction.SplitDataset import CarPartDataset
+from modelConstruction.PartDataset import CarPartDataset
 from modelConstruction.ModelConfiguration import get_pretrained_model
 from controllers.CarMakeData import car_brands
 from tqdm import tqdm
@@ -28,7 +28,7 @@ NUM_EPOCHS = 25
 NUM_SCHEDULE_CHUNKS = 4
 NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_EXPORT_PATH = "./car_classifier.pt"
+MODEL_EXPORT_PATH = "./data/car_classifier.pt"
 
 def train_model(datasheet: pd.DataFrame, workers: int = 2):
 
