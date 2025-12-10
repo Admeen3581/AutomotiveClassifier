@@ -36,6 +36,8 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
         num_workers=workers,
     )
 
+    crop_test_image(datasheet)
+
     print("Validating model...")
 
     model = get_pretrained_model()
@@ -74,6 +76,6 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
 def crop_test_image(datasheet : pd.DataFrame):
     # Pre-Crop all images in dataset
     for _, row in datasheet.iterrows():
-        path = f"./data/filtered_cars/train/{row['image_path']}"
+        path = f"./data/filtered_cars/test/{row['image_path']}"
         crop_dataset_image(row, path)
     print("Dataset cropped successfully...")
