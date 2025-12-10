@@ -19,7 +19,7 @@ from controllers.CarMakeData import car_brands
 def get_pretrained_model():
 
     #Using ResNet18 as the pretrained model.
-    model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+    model = models.resnet18(weights=models.ResNet50_Weights.DEFAULT)
 
     for param in model.parameters():
         param.requires_grad = False
