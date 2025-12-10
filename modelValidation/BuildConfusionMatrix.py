@@ -11,11 +11,10 @@ License: MIT - ALL RIGHTS RESERVED
 """
 
 #Imports
-import numpy as np
 import os
 import matplotlib.pyplot as plt
-import controllers.CarMakeData as car_brands
 
+from controllers.CarMakeData import car_brands
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 #Constants

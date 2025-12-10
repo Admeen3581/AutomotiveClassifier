@@ -34,6 +34,7 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
     the dataset in batches, and the model is evaluated for correctness by comparing
     predicted outputs with labeled data.
 
+    :param show_matrix:
     :param datasheet: A pandas DataFrame containing the dataset for testing.
     :param workers: Number of parallel data loading workers. Defaults to 2.
     :param model_path: Path to the pre-saved model checkpoint. Defaults to
@@ -89,7 +90,7 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
     print(f"Test Accuracy: {accuracy:.2f}%")
 
     #Build & Show confusion matrix
-    build_matrix(all_preds, all_labels)
+    build_matrix(all_preds, all_labels, show_plot=show_matrix)
 
 
 def crop_test_image(datasheet : pd.DataFrame):
