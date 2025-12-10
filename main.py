@@ -20,11 +20,10 @@ if __name__ == '__main__':
 
     dataset_init()
 
-    ds = get_datasheet()
 
     if not os.path.exists("./model/car_classifier(best).pt"):
         #Best model was trained via AWS: Nvidia L40S GPU w/ 8 CPU cores.
-        #25 epochs over 4 learning rate chunks. (see ModelTraining.py).
-        train_model(ds, 4)
+        #25 epochs over 4 learning rate chunks off ResNet101 (see ModelTraining.py).
+        train_model(get_datasheet(), 4)
 
-    validate_model(ds)
+    validate_model(get_datasheet("./data/anno_test_filtered.csv"))
