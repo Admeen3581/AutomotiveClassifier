@@ -21,8 +21,13 @@ class CarPartDataset(Dataset):
 
         self.datasheet_samples = []
 
+        if is_training:
+            dataset_type= 'train'
+        else:
+            dataset_type= 'test'
+
         for _, row in datasheet.iterrows():
-            path = f"./data/filtered_cars/train/{row['image_path']}"
+            path = f"./data/filtered_cars/{dataset_type}/{row['image_path']}"
             label = row['class_id']
             self.datasheet_samples.append((path, label))
 
