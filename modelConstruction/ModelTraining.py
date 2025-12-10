@@ -23,14 +23,16 @@ from controllers.CarMakeData import car_brands
 from tqdm import tqdm
 
 #Constants
-BATCH_SIZE = 64
-LEARNING_RATE = 0.01
-NUM_EPOCHS = 20
+BATCH_SIZE = 512
+NUM_EPOCHS = 25
+NUM_SCHEDULE_CHUNKS = 4
 NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_EXPORT_PATH = "./car_classifier.pt"
 
 def train_model(datasheet: pd.DataFrame, workers: int = 2):
+
+    print("\n\t---Training Started---\n")
 
     train_dataset = CarPartDataset(datasheet, True)
     train_loader = torch.utils.data.DataLoader(
@@ -48,41 +50,46 @@ def train_model(datasheet: pd.DataFrame, workers: int = 2):
     #Define loss function and optimizer
     criterion = torch.nn.CrossEntropyLoss()
 
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=LEARNING_RATE)
+    for sch in range(NUM_SCHEDULE_CHUNKS):
 
-    print("\n\t---Training Started---\n")
+        learning_rate = 10.0**(-(sch + 2))
+        optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=learning_rate)
 
-    for epoch in range(NUM_EPOCHS):
-        print(f"\nEpoch {epoch + 1}\n-------------------------------")
-        model.train()
-        running_loss = 0.0
-        correct = 0
-        total = 0
+        print(f"\n\t---New Learning Rate - {learning_rate}---\n")
 
-        loop = tqdm(train_loader, desc=f"Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
+        for epoch in range(NUM_EPOCHS):
+            print(f"\nChunk {sch + 1} | Epoch {epoch + 1}\n-------------------------------")
+            model.train()
+            running_loss = 0.0
+            correct = 0
+            total = 0
 
-        for images, labels in loop:
-            #Transfer CPU/GPU data
-            images, labels = images.to(DEVICE), labels.to(DEVICE)
+            loop = tqdm(train_loader, desc=f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}]", leave=True)
 
-            #Forward Pass
-            with torch.autocast(device_type=DEVICE.type, dtype=torch.bfloat16):
-                outputs = model(images)
-                loss = criterion(outputs, labels)
+            for images, labels in loop:
+                #Transfer CPU/GPU data
+                images, labels = images.to(DEVICE), labels.to(DEVICE)
 
-            #Backward Pass
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+                #Forward Pass
+                with torch.autocast(device_type=DEVICE.type, dtype=torch.bfloat16):
+                    outputs = model(images)
+                    loss = criterion(outputs, labels)
 
-            #Stats
-            running_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+                #Backward Pass
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-        epoch_accuracy = 100 * correct / total
-        print(f"Epoch [{epoch + 1}/{NUM_EPOCHS}] Loss: {running_loss / len(train_loader):.4f} | Accuracy: {epoch_accuracy:.2f}%")
+                #Stats
+                running_loss += loss.item()
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+
+            epoch_accuracy = 100 * correct / total
+            print(f"Chunk [{sch+1}/{NUM_SCHEDULE_CHUNKS}] | Epoch [{epoch+1}/{NUM_EPOCHS}] | Loss: {running_loss / len(train_loader):.4f} | Accuracy: {epoch_accuracy:.2f}%")
+
+
 
     print("\n\t---Training Complete---\n")
 
