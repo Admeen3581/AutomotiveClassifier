@@ -31,7 +31,7 @@ def dataset_init():
     """
 
     # Create the data directory if it doesn't exist'
-    DOWNLOAD_DIR = './data/stanford_cars'
+    DOWNLOAD_DIR = './data'
 
     if not os.path.exists(DOWNLOAD_DIR):
         os.makedirs(DOWNLOAD_DIR)
