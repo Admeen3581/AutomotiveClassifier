@@ -37,8 +37,6 @@ def validate_model(datasheet : pd.DataFrame, workers: int = 2, model_path: str =
         persistent_workers=(workers > 0),
     )
 
-    crop_test_image(datasheet)
-
     print("Validating model...")
 
     model = get_pretrained_model()
