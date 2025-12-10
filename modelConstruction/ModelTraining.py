@@ -30,10 +30,16 @@ NUM_CLASSES = len(car_brands)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_EXPORT_PATH = "./car_classifier.pt"
 
-def train_model(datasheet: pd.DataFrame):
+def train_model(datasheet: pd.DataFrame, workers: int = 2):
 
     train_dataset = CarPartDataset(datasheet, True)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, persistent_workers=True)
+    train_loader = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=True,
+        num_workers=workers,
+        persistent_workers=True,
+        pin_memory=True)
 
     #Initialize Model
     model = get_pretrained_model()
