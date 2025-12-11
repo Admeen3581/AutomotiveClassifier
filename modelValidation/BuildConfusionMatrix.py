@@ -23,13 +23,13 @@ NUM_CLASSES = len(car_brands)
 def build_matrix(all_preds: list, all_labels: list, show_plot: bool = True):
 
 
-    matrix = confusion_matrix(all_labels, all_preds, normalize='true')
+    matrix = confusion_matrix(all_labels, all_preds, normalize='true', labels=list(range(NUM_CLASSES)))
 
     plt.figure(figsize=(18, 18))#Hardcode plot big enough for 40x40
 
     display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=car_brands)
     display.plot(
-        cmap='Blues',
+        cmap=plt.cm.get_cmap('Blues', NUM_CLASSES),
         xticks_rotation='vertical',
         values_format='.2f'
     )
