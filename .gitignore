@@ -5,9 +5,10 @@
 #Secrets
 .env
 
-#Datasets -- Preventative
+#Datasets & Outputs -- Preventative
 /data
 /model
+/output
 
 #Personal FIles
 /guides

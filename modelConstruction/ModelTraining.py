@@ -31,6 +31,22 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_EXPORT_PATH = "./model/car_classifier.pt"
 
 def train_model(datasheet: pd.DataFrame, workers: int = 2, model_path: str = MODEL_EXPORT_PATH):
+    """
+    Train a machine learning model.
+
+    Using the provided dataset, number of workers, and specified file path build a pre-trained CNN model.
+    The training process includes multiple schedule chunks, each with a decreasing learning rate, and
+    logs metrics such as loss and accuracy.
+
+    :param datasheet: Dataframe containing the training data.
+    :type datasheet: pd.DataFrame
+    :param workers: Number of subprocesses to use for data loading. Should be greater than or equal to zero.
+    :type workers: int
+    :param model_path: File path used to export/save the trained model. Must have '.pt' extension.
+    :type model_path: str
+    :raises ValueError: Raised when `model_path` does not end with the '.pt' extension.
+    :return: None
+    """
 
     #Model Path Logic
     os.makedirs(os.path.dirname(model_path), exist_ok=True)

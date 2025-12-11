@@ -55,6 +55,20 @@ def dataset_init():
 
 
 def get_datasheet(csv_path: str = "./data/anno_train_filtered.csv"):
+    """
+    Reads a CSV file containing annotation data into a Pandas DataFrame.
+
+    This CSV file is expected to have no header row and contains information about
+    image paths, bounding box coordinates, and class IDs. The newly created
+    DataFrame will have specific column names assigned to these properties.
+
+    :param csv_path: The file path to the CSV containing annotation data.
+    :type csv_path: str
+    :raises FileNotFoundError: Raised if the CSV file does not exist at the given path.
+    :return: A pandas DataFrame containing the processed annotation data.
+    :rtype: pandas.DataFrame
+    """
+
     if not os.path.exists(csv_path):
         raise FileNotFoundError(f"Could not find CSV file at {csv_path}. Possible a dataset API call issue.")
 
