@@ -29,7 +29,7 @@ def build_matrix(all_preds: list, all_labels: list, show_plot: bool = True):
 
     display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=car_brands)
     display.plot(
-        cmap=plt.cm.get_cmap('Blues', NUM_CLASSES),
+        cmap='Blues',
         xticks_rotation='vertical',
         values_format='.2f'
     )
