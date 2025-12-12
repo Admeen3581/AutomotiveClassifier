@@ -1,10 +1,10 @@
-AutomotiveClassifier
+# AutomotiveClassifier
 ====================
 
 Computer Vision project to classify vehicle makes (e.g., Toyota, Subaru, Ford) using a transfer‑learned ResNet‑101. The repository automates dataset download from Kaggle, dataset filtering/restructuring, pre‑cropping to bounding boxes, training, and validation with a saved confusion matrix.
 
 
-Contents
+## Contents
 --------
 - What this project does
 - Repo structure
@@ -19,7 +19,7 @@ Contents
 - License
 
 
-Before you start (read me if you’re new!)
+## Before you start (read me if you’re new!)
 ----------------------------------------
 If you’re not comfortable with Python tools yet, follow these tips first:
 
@@ -27,9 +27,6 @@ If you’re not comfortable with Python tools yet, follow these tips first:
   - Check your version (Windows PowerShell):
     ```powershell
     python --version
-    ```
-    ```powershell
-    py --version
     ```
   - Check your version (macOS/Linux):
     ```bash
@@ -63,7 +60,7 @@ If you’re not comfortable with Python tools yet, follow these tips first:
 - Copy exactly what is inside each code box as a single line. Every command below is split so you can copy one line at a time.
 
 
-What this project does
+## What this project does
 ----------------------
 At a high level:
 1. Downloads the “Stanford Car Dataset by classes folder” from Kaggle.
@@ -75,7 +72,7 @@ At a high level:
 7. Produces a normalized confusion matrix image saved to `./output/ConfusionMatrix.png`.
 
 
-Repo structure
+## Repo structure
 --------------
 Top‑level overview (non‑exhaustive):
 
@@ -90,7 +87,7 @@ Top‑level overview (non‑exhaustive):
 - `.env` — Your Kaggle API credentials.
 
 
-Prerequisites
+## Prerequisites
 -------------
 Software
 - Python 3.11–3.14 (project targets >=3.11, <3.15).
@@ -109,84 +106,81 @@ Disk and bandwidth
 - Dataset download, repository files, extraction, and other files require ~4GB gigabytes free. ***Ensure you have 4GB of space free on your disk before cloning.***
 
 
-Installation
+## Installation
 ------------
-Option A — Poetry (recommended)
+
+### Option A — pip w/ Poetry
 1. Clone the repository.
    - Windows (PowerShell):
      ```powershell
      git clone https://github.com/Admeen3581/AutomotiveClassifier.git
-     ```
-     ```powershell
      cd AutomotiveClassifier
      ```
    - macOS/Linux (Bash):
      ```bash
      git clone https://github.com/Admeen3581/AutomotiveClassifier.git
-     ```
-     ```bash
      cd AutomotiveClassifier
      ```
-2. Install Poetry if you don’t have it.
-   - Windows (PowerShell):
-     ```powershell
-     (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
-     ```
-     ```powershell
-     py -m pip install poetry
-     ```
-   - macOS/Linux:
-     ```bash
-     curl -sSL https://install.python-poetry.org | python3 -
-     ```
-     ```bash
-     python3 -m pip install --user poetry
-     ```
-3. Install dependencies.
-   ```bash
-   poetry install
-   ```
-4. Optional: Activate the virtual environment for manual commands (optional; `poetry run …` also works):
-   ```bash
-   poetry shell
-   ```
-
-Option B — pip + venv
-1. Create and activate a virtual environment.
-   - Windows (PowerShell):
-     ```powershell
-     py -3.11 -m venv .venv
-     ```
-     ```powershell
-     .\.venv\Scripts\Activate.ps1
-     ```
-   - macOS/Linux:
-     ```bash
-     python3.11 -m venv .venv
-     ```
-     ```bash
-     source .venv/bin/activate
-     ```
- 2. Install Poetry inside this virtual environment using pip (then install all project dependencies via Poetry):
-   - Upgrade pip first:
+2. Install Poetry:
+   - Install/Upgrade pip first:
      ```bash
      python -m pip install --upgrade pip
      ```
-   - Install Poetry into the venv:
+   - Install Poetry:
      ```bash
      pip install poetry
      ```
-   - Install project dependencies from pyproject using Poetry:
+3. Install project dependencies from pyproject using Poetry:
      ```bash
      poetry install
      ```
-   - Optional: stay inside venv and use Poetry to run the app:
+4. Build your .env file in the *root* directory:
+      ```env
+     KAGGLE_API_USER=<your_kaggle_username>
+     ```
+     ```env
+     KAGGLE_API_TOKEN=<your_kaggle_api_key>
+     ```
+5. Optional: Use Poetry to run the app:
      ```bash
      poetry run python main.py
      ```
 
+### Option B — No Poetry (pip exclusively; not recommended)
+1. Clone the repository.
+   - Windows (PowerShell):
+     ```powershell
+     git clone https://github.com/Admeen3581/AutomotiveClassifier.git
+     cd AutomotiveClassifier
+     ```
+   - macOS/Linux (Bash):
+     ```bash
+     git clone https://github.com/Admeen3581/AutomotiveClassifier.git
+     cd AutomotiveClassifier
+     ```
+2. Install Poetry:
+   - Upgrade pip first:
+     ```bash
+     python -m pip install --upgrade pip
+     ```
+   - Install Poetry:
+     ```bash
+     pip install requests kaggle python-dotenv opencv-python torch torchvision numpy pandas matplotlib scikit-learn tqdm
+     ```
+3. Build your .env file in the *root* directory:
+      ```env
+     KAGGLE_API_USER=<your_kaggle_username>
+     ```
+     ```env
+     KAGGLE_API_TOKEN=<your_kaggle_api_key>
+     ```
+4. Optional: Run the app:
+     ```bash
+     python main.py
+     ```
 
-Configure Kaggle API (.env)
+
+## Configure Kaggle API (.env)
 ---------------------------
 The dataset is downloaded via the Kaggle CLI and requires API credentials.
 
@@ -204,7 +198,7 @@ The dataset is downloaded via the Kaggle CLI and requires API credentials.
    - https://www.kaggle.com/datasets/jutrera/stanford-car-dataset-by-classes-folder
 
 
-Quickstart
+## Quickstart
 ----------
 Run the end‑to‑end pipeline. On first run, this will:
 - Create `./data/` if it does not exist.
@@ -233,14 +227,14 @@ Notes
   - Device: CUDA if available, else CPU
 
 
-Outputs and artifacts
+## Outputs and artifacts
 ---------------------
 - `./model/car_classifier.pt` — Saved PyTorch weights after training.
 - `./output/ConfusionMatrix.png` — Normalized confusion matrix over the test set.
 - `./data/filtered_cars/` — Filtered and preprocessed dataset layout used by the model.
 
 
-Troubleshooting
+## Troubleshooting
 ---------------
 - “kaggle: command not found” or Kaggle CLI not recognized
   - Ensure the environment has Kaggle installed (it is declared in pyproject and installed by Poetry). Re‑open your terminal so the `kaggle` command is on PATH.
@@ -249,6 +243,9 @@ Troubleshooting
 
 - Dataset init keeps skipping with a message that `./data` exists
   - Delete the `./data` directory to force a fresh init. The initializer returns early if it detects an existing data directory.
+ 
+- `FileNotFoundError: Could not find CSV file at ./data/anno_test_filtered.csv. Possible a dataset API call issue.`
+  - - Delete the `./data` directory to force a fresh init.
 
 - CUDA/CuDNN errors
   - If you don’t need GPU acceleration, run on CPU (it will auto‑detect). If you do, ensure your NVIDIA driver is up to date and that your Torch install matches your CUDA runtime. Installing the default pip/Poetry wheel typically includes a compatible CUDA runtime.
@@ -256,11 +253,11 @@ Troubleshooting
 - OpenCV cannot read images (`Image not found`)
   - Ensure the dataset successfully downloaded and reorganized and that your working directory is the project root when running `main.py`.
 
-- `ModuleNotFoundError: No module named 'tqdm'`
-  - Run `poetry install` again to ensure all dependencies are present. If you installed outside Poetry, install it with: `pip install tqdm`.
+- `TypeError: expected str, bytes or os.PathLike object, not NoneType`
+  - Ensure you .env file is setup correctly.
 
 
-FAQ
+## FAQ
 ---
 - Which dataset do we use?
   - Kaggle: “Stanford Car Dataset by classes folder” (jutrera/stanford-car-dataset-by-classes-folder).
@@ -275,11 +272,11 @@ FAQ
   - Delete the `./data` directory and run `main.py` again.
 
 
-Contributing
+## Contributing
 ------------
 Pull requests are welcome. Please keep to the existing code style and structure. If adding dependencies, update `pyproject.toml` and ensure installation works with both Poetry and pip/venv. Consider adding or updating tests under `test/` as appropriate.
 
 
-License
+## License
 -------
 This project is licensed under the MIT License. See `LICENSE.md` for details.
