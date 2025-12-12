@@ -19,7 +19,7 @@ from modelConstruction.ModelTraining import *
 MODEL_PATH = "./model/car_classifier.pt"
 
 if __name__ == '__main__':
-    print("Hello There :)\nVehicular Classifier Ver.1.1\n\n\t---Initializing---\n\n")
+    print("Hello There :)\nVehicular Classifier Ver.1.3\n\n\t---Initializing---\n\n")
 
     dataset_init()
 
