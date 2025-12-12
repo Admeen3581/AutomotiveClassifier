@@ -138,7 +138,7 @@ Disk and bandwidth
    - ```env
      KAGGLE_API_USER=<your_kaggle_username>
      ```
-     ```env
+   - ```env
      KAGGLE_API_TOKEN=<your_kaggle_api_key>
      ```
 5. Optional: Use Poetry to run the app:
@@ -171,7 +171,7 @@ Disk and bandwidth
    - ```env
      KAGGLE_API_USER=<your_kaggle_username>
      ```
-     ```env
+   - ```env
      KAGGLE_API_TOKEN=<your_kaggle_api_key>
      ```
 4. Optional: Run the app:
@@ -187,12 +187,12 @@ The dataset is downloaded via the Kaggle CLI and requires API credentials.
 1. Create a Kaggle account (https://www.kaggle.com/).
 2. Generate an API token: Account settings → Create New API Token. This downloads `kaggle.json` containing `username` and `key`.
 3. In this project’s root directory, create a file named `.env` with these two lines (each line is separate):
-   ```env
-   KAGGLE_API_USER=<your_kaggle_username>
-   ```
-   ```env
-   KAGGLE_API_TOKEN=<your_kaggle_api_key>
-   ```
+   - ```env
+     KAGGLE_API_USER=<your_kaggle_username>
+     ```
+   - ```env
+     KAGGLE_API_TOKEN=<your_kaggle_api_key>
+     ```
 4. Ensure the `kaggle` command is available in your shell. If you just installed it, close and reopen your terminal.
 5. You must accept the dataset’s terms on Kaggle to download it. Visit the dataset page and click “I Understand and Accept” if prompted:
    - https://www.kaggle.com/datasets/jutrera/stanford-car-dataset-by-classes-folder
