@@ -131,18 +131,18 @@ Disk and bandwidth
      pip install poetry
      ```
 3. Install project dependencies from pyproject using Poetry:
-     ```bash
+   - ```bash
      poetry install
      ```
 4. Build your .env file in the *root* directory:
-      ```env
+   - ```env
      KAGGLE_API_USER=<your_kaggle_username>
      ```
      ```env
      KAGGLE_API_TOKEN=<your_kaggle_api_key>
      ```
 5. Optional: Use Poetry to run the app:
-     ```bash
+   - ```bash
      poetry run python main.py
      ```
 
@@ -168,14 +168,14 @@ Disk and bandwidth
      pip install requests kaggle python-dotenv opencv-python torch torchvision numpy pandas matplotlib scikit-learn tqdm
      ```
 3. Build your .env file in the *root* directory:
-      ```env
+   - ```env
      KAGGLE_API_USER=<your_kaggle_username>
      ```
      ```env
      KAGGLE_API_TOKEN=<your_kaggle_api_key>
      ```
 4. Optional: Run the app:
-     ```bash
+   - ```bash
      python main.py
      ```
 
