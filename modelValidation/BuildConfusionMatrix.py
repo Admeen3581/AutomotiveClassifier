@@ -35,11 +35,11 @@ def build_matrix(all_preds: list, all_labels: list, show_plot: bool = True):
     )
 
     axis = display.ax_
-    axis.tick_params(axis='both', which='major', labelsize=3)
+    axis.tick_params(axis='both', which='major', labelsize=4)
     for text in axis.texts:
         text.set_fontsize(2)
 
-    plt.title("Confusion Matrix (VMC Test Dataset)")
+    plt.title("Confusion Matrix (VMC Test Dataset)").set_fontsize(7)
     plt.xlabel("Predicted Label").set_fontsize(5)
     plt.ylabel("True Label").set_fontsize(5)
 
@@ -48,7 +48,7 @@ def build_matrix(all_preds: list, all_labels: list, show_plot: bool = True):
 
     plt.tight_layout()
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    plt.savefig(save_path, dpi=200)
+    plt.savefig(save_path, dpi=300)
     if show_plot:
         plt.show()
 
