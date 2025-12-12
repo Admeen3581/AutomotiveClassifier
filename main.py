@@ -26,6 +26,7 @@ if __name__ == '__main__':
     if not os.path.exists(MODEL_PATH):
         #Best model was trained via AWS: Nvidia L40S GPU w/ 8 CPU cores.
         #25 epochs over 4 learning rate chunks off ResNet101 (see ModelTraining.py).
+        #Training with the above setup typically takes ~1 hour.
         train_model(get_datasheet(), 4)
     else:
         print("Model detected. Skipping training...")
